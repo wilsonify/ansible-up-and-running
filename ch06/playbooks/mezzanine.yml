@@ -127,6 +127,8 @@
         - psycopg2
         - django-compressor
         - python-memcached
+    - name: reinstall bleach 1.5
+      pip: name=bleach virtualenv={{ venv_path }} version=1.5 state=forcereinstall
     - name: apply migrations to create the database, collect static content
       django_manage:
         command: "{{ item }}"
