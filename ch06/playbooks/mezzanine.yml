@@ -58,7 +58,6 @@
     - name: install Python requirements globally via pip
       pip: name={{ item }} state=latest
       with_items:
-        - pip
         - virtualenv
         - virtualenvwrapper
       become: True
