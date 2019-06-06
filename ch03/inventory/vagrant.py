@@ -21,7 +21,7 @@ def list_running_hosts():
     cmd = "vagrant status --machine-readable"
     status = subprocess.check_output(cmd.split()).rstrip()
     hosts = []
-    for line in status.split('\n'):
+    for line in status.splitlines():
         (_, host, key, value) = line.split(',')[:4]
         if key == 'state' and value == 'running':
             hosts.append(host)
