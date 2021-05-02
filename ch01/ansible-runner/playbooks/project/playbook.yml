@@ -1,0 +1,11 @@
+---
+- hosts: all
+
+  tasks:
+    - name: setup
+      setup:
+      register: setup
+
+    - name: display
+      debug:
+        var: setup
