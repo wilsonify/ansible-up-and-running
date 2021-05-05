@@ -1,6 +1,6 @@
 #!/usr/bin/env ansible-playbook
 ---
-- name: Configure webserver with nginx and tls
+- name: Configure webserver with Nginx and TLS
   hosts: webservers
   become: true
   gather_facts: false
@@ -25,19 +25,19 @@
 
     - name: copy TLS key
       copy:
-        src: files/nginx.key
+        src: nginx.key
         dest: "{{ key_file }}"
         mode: 0600
 
     - name: copy TLS certificate
       copy:
-        src: files/nginx.crt
+        src: nginx.crt
         dest: "{{ cert_file }}"
         mode: 0644
 
     - name: install nginx config template
       template:
-        src: templates/nginx.conf.j2
+        src: nginx.conf.j2
         dest: "{{ conf_file }}"
         mode: 0644
 
