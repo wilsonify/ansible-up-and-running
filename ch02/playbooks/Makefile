@@ -1,4 +1,53 @@
-.PHONY: run
+# type 'make' for help with this Makefile
 
-run:
-	ansible-playbook web-notls.yml
+.PHONY: help
+help:
+	@echo "'make install' to install libraries"
+	@echo "'make check' to validate content"
+	@echo "'make no-tls' to run first playbook"
+	@echo "'make tls' to run second playbook"
+	@echo "'make test' to run test webserver"
+
+
+.PHONY: install
+install:
+	pip3 install --user -r requirements.txt
+
+.PHONY: check
+check:
+	ansible-playbook --syntax-check webservers.yml webservers2.yml webservers-tls.yml
+	ansible-lint webservers.yml webservers2.yml webservers-tls.yml
+	yamllint webservers2.yml webservers-tls.yml
+	vagrant validate
+
+update:
+	vagrant box update
+
+up: update
+	vagrant up --no-provision
+
+.PHONY: no-tls
+no-tls: up
+	ansible-playbook webservers.yml
+
+.PHONY: tls
+tls: no-tls
+	@mkdir -p files
+	openssl req -x509 -nodes -newkey rsa:2048 \
+		-subj /CN=localhost \
+		-keyout files/nginx.key \
+		-out files/nginx.crt
+	ansible-playbook webservers-tls.yml
+
+.PHONY: test
+test:
+	curl --fail --head http://localhost:8080/index.html
+	curl --fail --head -k https://localhost:8443/index.html
+	ansible-playbook webservers-tls.yml --tags test -vv
+
+.PHONY: clean
+clean:
+	rm -f files/nginx.key files/nginx.crt
+	vagrant destroy -f
+
+all: clean tls test clean
