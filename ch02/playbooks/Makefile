@@ -18,6 +18,7 @@ check:
 	ansible-playbook --syntax-check webservers.yml webservers2.yml webservers-tls.yml
 	ansible-lint webservers.yml webservers2.yml webservers-tls.yml
 	yamllint webservers2.yml webservers-tls.yml
+	ansible-inventory --host testserver -i inventory/vagrant.ini
 	vagrant validate
 
 update:
