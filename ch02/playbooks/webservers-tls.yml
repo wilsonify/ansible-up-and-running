@@ -11,35 +11,46 @@
     conf_file: /etc/nginx/sites-available/default
     server_name: localhost
 
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
   tasks:
     - name: install nginx
       package:
         name: nginx
         update_cache: true
+      notify: restart nginx
 
     - name: create directories for TLS certificates
       file:
         path: /etc/nginx/ssl
         state: directory
         mode: 0750
+      notify: restart nginx
 
     - name: copy TLS key
       copy:
         src: nginx.key
         dest: "{{ key_file }}"
         mode: 0600
+      notify: restart nginx
 
     - name: copy TLS certificate
       copy:
         src: nginx.crt
         dest: "{{ cert_file }}"
         mode: 0644
+      notify: restart nginx
 
     - name: install nginx config template
       template:
         src: nginx.conf.j2
         dest: "{{ conf_file }}"
         mode: 0644
+      notify: restart nginx
 
     - name: enable configuration
       file:
@@ -54,9 +65,7 @@
         mode: 0644
 
     - name: restart nginx
-      service:
-        name: nginx
-        state: restarted
+      meta: flush_handlers
 
     - name: "test it! https://localhost:8443/index.html"
       delegate_to: localhost
