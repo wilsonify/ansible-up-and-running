@@ -13,7 +13,7 @@
 
   tasks:
     - name: install nginx
-      apt:
+      package:
         name: nginx
         update_cache: true
 
