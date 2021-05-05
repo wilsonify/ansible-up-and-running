@@ -15,11 +15,11 @@ install:
 
 .PHONY: check
 check:
-	ansible-playbook --syntax-check webservers.yml webservers2.yml webservers-tls.yml
-	ansible-lint webservers.yml webservers2.yml webservers-tls.yml
-	yamllint webservers2.yml webservers-tls.yml
 	ansible-inventory --host testserver -i inventory/vagrant.ini
+	ansible-playbook --syntax-check webservers-tls.yml
+	ansible-lint webservers-tls.yml
 	vagrant validate
+	git ls-files *.yml | xargs yamllint
 
 update:
 	vagrant box update
