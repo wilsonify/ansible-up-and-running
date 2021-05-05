@@ -14,7 +14,6 @@
       copy:
         src: nginx.conf
         dest: /etc/nginx/sites-available/default
-        mode: 0640
 
     - name: enable configuration
       file:
@@ -26,7 +25,6 @@
       template:
         src: index.html.j2
         dest: /usr/share/nginx/html/index.html
-        mode: 0640
 
     - name: restart nginx
       service:
