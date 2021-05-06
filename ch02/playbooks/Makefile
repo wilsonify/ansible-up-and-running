@@ -12,12 +12,14 @@ help:
 .PHONY: install
 install:
 	pip3 install --user -r requirements.txt
+	pipx install jinjalint
 
 .PHONY: check
 check:
 	ansible-inventory --host testserver -i inventory/vagrant.ini
 	ansible-playbook --syntax-check webservers-tls.yml
 	ansible-lint webservers-tls.yml
+	jinjalint templates/
 	vagrant validate
 	git ls-files *.yml | xargs yamllint
 
