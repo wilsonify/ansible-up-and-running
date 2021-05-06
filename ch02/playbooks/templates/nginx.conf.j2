@@ -8,8 +8,8 @@ server {
         index index.html;
 
         server_name {{ server_name }};
-        ssl_certificate {{ cert_file }};
-        ssl_certificate_key {{ key_file }};
+        ssl_certificate {{ tls_dir }}{{ cert_file }};
+        ssl_certificate_key {{ tls_dir }}{{ key_file }};
 
         location / {
                 try_files $uri $uri/ =404;
