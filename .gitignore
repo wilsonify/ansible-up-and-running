@@ -1,5 +1,7 @@
 .vagrant
 .venv
+*.crt
+*.key
 ch05/venv
 ch05/myproject
 ch06/playbooks/secrets.yml
