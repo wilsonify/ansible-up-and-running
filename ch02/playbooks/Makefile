@@ -31,7 +31,7 @@ up: update
 
 .PHONY: no-tls
 no-tls: up
-	ansible-playbook webservers.yml
+	ansible-playbook webservers2.yml
 
 .PHONY: tls
 tls: no-tls
