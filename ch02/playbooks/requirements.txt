@@ -1,5 +1,4 @@
-ansible==2.9.20
+ansible==4.0.0
 ansible-lint==4.3.7
-attrs>=19.2.0
 pipx
 yamllint==1.26.1
