@@ -12,7 +12,7 @@ help:
 .PHONY: install
 install:
 	pip3 install --user -r requirements.txt
-	pipx install jinjalint
+	pipx install --force jinjalint
 
 .PHONY: check
 check:
