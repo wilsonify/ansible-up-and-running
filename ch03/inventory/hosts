@@ -1,43 +1,49 @@
 [production]
-delaware.example.com
-georgia.example.com
-maryland.example.com
-newhampshire.example.com
-newjersey.example.com
+frankfurt.example.com
+helsinki.example.com
+hongkong.example.com
+johannesburg.example.com
+london.example.com
 newyork.example.com
-northcarolina.example.com
-pennsylvania.example.com
-rhodeisland.example.com
-virginia.example.com
+seoul.example.com
+sydney.example.com
+tokyo.example.com
+toronto.example.com
 
 [staging]
-ontario.example.com
-quebec.example.com
+amsterdam.example.com
+chicago.example.com
+
+[vagrant]
+vagrant1 ansible_port=2222
+vagrant2 ansible_port=2200
+vagrant3 ansible_port=2201
+
 
 [lb]
-delaware.example.com
+helsinki.example.com
 
 [web]
-georgia.example.com
-newhampshire.example.com
-newjersey.example.com
-ontario.example.com
+amsterdam.example.com
+seoul.example.com
+sydney.example.com
+toronto.example.com
 vagrant1
 
 [task]
+amsterdam.example.com
+hongkong.example.com
+johannesburg.example.com
 newyork.example.com
-northcarolina.example.com
-maryland.example.com
-ontario.example.com
 vagrant2
 
 [rabbitmq]
-pennsylvania.example.com
-quebec.example.com
+chicago.example.com
+tokyo.example.com
 vagrant3
 
 [db]
-rhodeisland.example.com
-virginia.example.com
-quebec.example.com
+chicago.example.com
+frankfurt.example.com
+london.example.com
 vagrant3
