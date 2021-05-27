@@ -1,15 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+""" Vagrant inventory script """
 # Adapted from Mark Mandel's implementation
-# https://github.com/ansible/ansible/blob/stable-2.1/contrib/inventory/vagrant.py
+# https://github.com/markmandel/vagrant_ansible_example
 
 import argparse
+import io
 import json
-import paramiko
 import subprocess
 import sys
 
+import paramiko
+
 
 def parse_args():
+    """command-line options"""
     parser = argparse.ArgumentParser(description="Vagrant inventory script")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--list', action='store_true')
@@ -18,8 +22,9 @@ def parse_args():
 
 
 def list_running_hosts():
-    cmd = "vagrant status --machine-readable"
-    status = subprocess.check_output(cmd.split()).rstrip()
+    """vagrant.py --list function"""
+    cmd = ["vagrant", "status", "--machine-readable"]
+    status = subprocess.check_output(cmd).rstrip().decode("utf-8")
     hosts = []
     for line in status.splitlines():
         (_, host, key, value) = line.split(',')[:4]
@@ -29,18 +34,20 @@ def list_running_hosts():
 
 
 def get_host_details(host):
-    cmd = "vagrant ssh-config {}".format(host)
-    p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+    """vagrant.py --host <hostname> function"""
+    cmd = ["vagrant", "ssh-config", host]
+    ssh_config = subprocess.check_output(cmd).decode("utf-8")
     config = paramiko.SSHConfig()
-    config.parse(p.stdout)
-    c = config.lookup(host)
-    return {'ansible_host': c['hostname'],
-            'ansible_port': c['port'],
-            'ansible_user': c['user'],
-            'ansible_private_key_file': c['identityfile'][0]}
+    config.parse(io.StringIO(ssh_config))
+    host_config = config.lookup(host)
+    return {'ansible_host': host_config['hostname'],
+            'ansible_port': host_config['port'],
+            'ansible_user': host_config['user'],
+            'ansible_private_key_file': host_config['identityfile'][0]}
 
 
 def main():
+    """main"""
     args = parse_args()
     if args.list:
         hosts = list_running_hosts()
@@ -49,6 +56,6 @@ def main():
         details = get_host_details(args.host)
         json.dump(details, sys.stdout)
 
+
 if __name__ == '__main__':
     main()
-
