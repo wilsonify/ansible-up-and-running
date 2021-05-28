@@ -14,12 +14,6 @@ toronto.example.com
 amsterdam.example.com
 chicago.example.com
 
-[vagrant]
-vagrant1 ansible_port=2222
-vagrant2 ansible_port=2200
-vagrant3 ansible_port=2201
-
-
 [lb]
 helsinki.example.com
 
@@ -46,4 +40,8 @@ vagrant3
 chicago.example.com
 frankfurt.example.com
 london.example.com
-vagrant3
+
+[vagrant]
+vagrant1 ansible_port=2222
+vagrant2 ansible_port=2200
+vagrant3 ansible_port=2201
