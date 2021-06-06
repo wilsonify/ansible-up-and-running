@@ -1,5 +1,5 @@
 ---
-- name: show a fact returned by a module
+- name: show any variable during debugging.
   hosts: all
   gather_facts: false
   tasks:
