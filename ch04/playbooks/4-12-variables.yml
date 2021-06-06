@@ -1,0 +1,7 @@
+---
+- name: show a fact returned by a module
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - debug: var="{{ variable }}"
