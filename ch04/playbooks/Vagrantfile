@@ -6,17 +6,26 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "ubuntu" do |ubuntu|
-    ubuntu.vm.box = "ubuntu/trusty64"
+    ubuntu.vm.box = "ubuntu/focal64"
     ubuntu.vm.network "private_network", ip: "192.168.4.10"
+    ubuntu.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "ubuntu"
+    end
   end
 
-  config.vm.define "centos" do |centos|
-    centos.vm.box = "centos/7"
-    centos.vm.network "private_network", ip: "192.168.4.11"
+  config.vm.define "fedora" do |fedora|
+    fedora.vm.box = "fedora/34-cloud-base"
+    fedora.vm.network "private_network", ip: "192.168.4.11"
+	fedora.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "fedora"
+    end
   end
 
-  config.vm.define "precise" do |precise|
-    precise.vm.box = "ubuntu/precise64"
-    precise.vm.network "private_network", ip: "192.168.4.12"
+  config.vm.define "debian" do |debian|
+    debian.vm.box = "debian/buster64"
+    debian.vm.network "private_network", ip: "192.168.4.12"
+	debian.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "debian"
+    end
   end
 end
