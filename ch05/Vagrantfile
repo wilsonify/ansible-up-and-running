@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |this|
+
+  this.vm.define "vagrant" do |vagrant|
+    vagrant.vm.box = "ubuntu/focal64"
+    vagrant.vm.network "forwarded_port", guest: 8000, host: 8000
+    vagrant.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "mezzanine"
+    end
+  end
+
+  # provision the VM with a shell script
+  this.vm.provision "shell", path: "./mezzanine-dev.sh"
+  this.vm.provision "shell", inline: "echo Now open http://127.0.0.1:8000/"
+end
