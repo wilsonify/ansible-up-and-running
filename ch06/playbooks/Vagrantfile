@@ -19,6 +19,7 @@ Vagrant.configure("2") do |this|
   end
   this.vm.provision "ansible" do |ansible|
     ansible.playbook = "mezzanine.yml"
+    ansible.verbose = "v"
     ansible.compatibility_mode = "2.0"
     ansible.host_key_checking = false
   end
