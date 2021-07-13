@@ -1,10 +1,10 @@
-#!/usr/bin/env python
-# A script to set the site domain
-# Assumes two environment variables
+#!/usr/bin/env python3
+""" A script to set the site domain """
+# Assumes three environment variables
 #
-# WEBSITE_DOMAIN: the domain of the site (e.g., www.example.com)
 # PROJECT_DIR: root directory of the project
 # PROJECT_APP: name of the project app
+# WEBSITE_DOMAIN: the domain of the site (e.g., www.example.com)
 import os
 import sys
 
