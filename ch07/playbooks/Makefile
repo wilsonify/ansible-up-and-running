@@ -2,10 +2,11 @@
 
 .PHONY: help
 help:
-	@echo "'make clean' to destroy virtual machines"
+	@echo "'make clean' to destroy virtual machine(s)"
 	@echo "'make check' to validate content"
 	@echo "'make update' vagrant box update"
-	@echo "'make provision' to run playbook"
+	@echo "'make single-host' to run playbook against web"
+	@echo "'make across-hosts' to run playbook against db and web"
 	@echo "'make test' validate result"
 
 
@@ -16,24 +17,36 @@ secrets.yml:
 .PHONY: check
 check: secrets.yml
 	ansible-inventory --graph -i inventory
-	ansible-playbook --syntax-check mezzanine-across-hosts.yml
-	ansible-lint mezzanine-across-hosts.yml
-	vagrant validate
+	ansible-playbook --syntax-check mezzanine-single-host.yml mezzanine-across-hosts.yml
+	ansible-lint mezzanine-single-host.yml mezzanine-across-hosts.yml
 	git ls-files *.yml | xargs yamllint
+	vagrant validate
 
+.PHONY: update
 update:
 	vagrant box update
 
-noprovision:
-	vagrant up --no-provision
+.PHONY: db
+db:
+	vagrant up db --no-provision
 
-provision: noprovision check
-	vagrant up
+.PHONY: web
+web:
+	vagrant up web --no-provision
+
+.PHONY: across-hosts
+across-hosts: db web check
+	ansible-playbook -v mezzanine-across-hosts.yml
+
+.PHONY: single-host
+single-host: web check
+	ansible-playbook -v mezzanine-single-host.yml
 
 .PHONY: clean
 clean:
 	vagrant destroy -f
 	@rm -rf .vagrant/
+	ssh-keygen -R [127.0.0.1]:2222
 
 .PHONY: test
 test:
@@ -41,4 +54,4 @@ test:
 	@echo '<h2>Congratulations!</h2>'
 	@curl -s -k https://www.192.168.33.10.nip.io/ | grep h2
 
-all: clean update provision test
+all: clean update single-host test clean across-hosts test
