@@ -12,23 +12,23 @@
       - python3-psycopg2
 
 - name: copy configuration file
+  become: true
   template:
     src: postgresql.conf
     dest: /etc/postgresql/12/main/postgresql.conf
     owner: postgres
     group: postgres
     mode: 0644
-  become: true
   notify: restart postgres
 
 - name: copy client authentication configuration file
+  become: true
   copy:
     src: pg_hba.conf
     dest: /etc/postgresql/12/main/pg_hba.conf
     owner: postgres
     group: postgres
     mode: 0640
-  become: true
   notify: restart postgres
 
 - name: create project locale
