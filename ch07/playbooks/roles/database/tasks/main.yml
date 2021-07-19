@@ -22,7 +22,7 @@
   notify: restart postgres
 
 - name: copy client authentication configuration file
-  template:
+  copy:
     src: pg_hba.conf
     dest: /etc/postgresql/12/main/pg_hba.conf
     owner: postgres
