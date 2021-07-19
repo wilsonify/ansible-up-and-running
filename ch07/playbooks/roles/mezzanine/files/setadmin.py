@@ -1,8 +1,8 @@
-#!/usr/bin/env python
-# A script to set the admin credentials
-# Assumes two environment variables
+#!/usr/bin/env python3
+""" A script to set the admin credentials """
+# Assumes three environment variables
 #
-# PROJECT_DIR: the project directory (e.g., ~/projname)
+# PROJECT_DIR: root directory of the project
 # PROJECT_APP: name of the project app
 # ADMIN_PASSWORD: admin user's password
 
