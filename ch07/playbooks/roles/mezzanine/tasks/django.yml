@@ -13,6 +13,7 @@
     dest: "{{ mezzanine_proj_path }}"
     version: master
     accept_hostkey: true
+    update: false
   tags:
     - repo
 
