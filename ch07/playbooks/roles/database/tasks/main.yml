@@ -1,33 +1,51 @@
 ---
+
 - name: install apt packages
-  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
-  become: True
-  with_items:
-    - libpq-dev
-    - postgresql
-    - python-psycopg2
+  become: true
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - acl  # for become_user: postgres
+      - libpq-dev
+      - postgresql
+      - python3-psycopg2
+
 - name: copy configuration file
-  copy: >
-    src=postgresql.conf dest=/etc/postgresql/9.3/main/postgresql.conf
-    owner=postgres group=postgres mode=0644
-  become: True
+  template:
+    src: postgresql.conf
+    dest: /etc/postgresql/12/main/postgresql.conf
+    owner: postgres
+    group: postgres
+    mode: 0644
+  become: true
   notify: restart postgres
+
 - name: copy client authentication configuration file
-  copy: >
-    src=pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
-    owner=postgres group=postgres mode=0640
-  become: True
+  template:
+    src: pg_hba.conf
+    dest: /etc/postgresql/12/main/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: 0640
+  become: true
   notify: restart postgres
+
 - name: create project locale
-  locale_gen: name={{ locale }}
-  become: True
-- name: create a user
+  become: true
+  locale_gen:
+    name: "{{ locale }}"
+
+- name: create a DB user
+  become: true
+  become_user: postgres
   postgresql_user:
     name: "{{ database_user }}"
     password: "{{ db_pass }}"
-  become: True
-  become_user: postgres
+
 - name: create the database
+  become: true
+  become_user: postgres
   postgresql_db:
     name: "{{ database_name }}"
     owner: "{{ database_user }}"
@@ -35,5 +53,3 @@
     lc_ctype: "{{ locale }}"
     lc_collate: "{{ locale }}"
     template: template0
-  become: True
-  become_user: postgres
