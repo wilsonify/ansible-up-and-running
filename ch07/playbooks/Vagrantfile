@@ -1,29 +1,24 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure("2") do |config|
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # Use the same key for each machine
+  # Vagrant virtual machines require a box to build off of.
+  config.vm.box = "ubuntu/focal64"
+  # Use the default insecure key for these machines
   config.ssh.insert_key = false
   # Forward ssh-agent for cloning from Github.com
   config.ssh.forward_agent = true
 
-
   config.vm.define 'db' do |db|
-
-    # Every Vagrant virtual environment requires a box to build off of.
-    db.vm.box = "ubuntu/focal64"
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
     db.vm.network "private_network", ip: "192.168.33.11"
-
-    # If true, then any SSH connections made will enable agent forwarding.
-    db.ssh.forward_agent = true
+    db.vm.hostname = "db"
 
     db.vm.provider "virtualbox" do |vb|
+      vb.name = "db"
       # Use VBoxManage to customize the VM. For example to change memory:
       vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
@@ -31,17 +26,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define 'web' do |web|
 
-    # Every Vagrant virtual environment requires a box to build off of.
-    web.vm.box = "ubuntu/focal64"
-
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
     web.vm.network "private_network", ip: "192.168.33.10"
-
-    # If true, then any SSH connections made will enable agent forwarding.
-    web.ssh.forward_agent = true
+    web.vm.hostname = "web"
 
     web.vm.provider "virtualbox" do |vb|
+      vb.name = "web"
       # Use VBoxManage to customize the VM. For example to change memory:
       vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
@@ -49,8 +40,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     web.vm.provision "ansible" do |ansible|
       ansible.limit = 'all'
       ansible.playbook = "mezzanine-across-hosts.yml"
-	  ansible.verbose = "v"
-	  ansible.compatibility_mode = "2.0"
+    ansible.verbose = "v"
+    ansible.compatibility_mode = "2.0"
     end
 
   end
