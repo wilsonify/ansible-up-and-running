@@ -71,6 +71,7 @@
         dest: "{{ proj_path }}"
         version: master
         accept_hostkey: true
+        update: false§
 
     - name: create python3 virtualenv
       pip:
@@ -183,6 +184,14 @@
         src: templates/local_settings.py.j2
         dest: "{{ settings_path }}/local_settings.py"
         mode: 0750
+
+    - name: initialize the database
+      django_manage:
+        command: createdb --noinput --nodata
+        app_path: "{{ proj_path }}"
+        virtualenv: "{{ venv_path }}"
+      tags:
+        - createdb
 
     - name: apply migrations to create the database, collect static content
       django_manage:
