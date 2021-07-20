@@ -30,7 +30,7 @@
 
 - name: copy requirements.txt to home directory
   copy:
-    src: requirements.txt
+    src: "{{ files_src_path | default() }}requirements.txt"
     dest: "{{ mezzanine_reqs_path }}"
     mode: 0644
 
