@@ -6,7 +6,6 @@
     state: directory
     mode: 0755
 
-
 - name: check out the repository on the host
   git:
     repo: "{{ mezzanine_repo_url }}"
@@ -42,7 +41,7 @@
 
 - name: generate the settings file
   template:
-    src: templates/local_settings.py.j2
+    src: local_settings.py.j2
     dest: "{{ mezzanine_settings_path }}/local_settings.py"
     mode: 0750
 
@@ -74,14 +73,14 @@
 
 - name: set the gunicorn config file
   template:
-    src: templates/gunicorn.conf.py.j2
+    src: gunicorn.conf.py.j2
     dest: "{{ mezzanine_proj_path }}/gunicorn.conf.py"
     mode: 0750
 
 - name: set the supervisor config file
   become: true
   template:
-    src: templates/supervisor.conf.j2
+    src: supervisor.conf.j2
     dest: /etc/supervisor/conf.d/mezzanine.conf
     mode: 0640
   notify: restart supervisor
