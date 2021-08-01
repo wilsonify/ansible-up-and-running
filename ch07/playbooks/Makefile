@@ -54,4 +54,4 @@ test:
 	@echo '<h2>Congratulations!</h2>'
 	@curl -s -k https://www.192.168.33.10.nip.io/ | grep h2
 
-all: clean update single-host test clean across-hosts test
+all: clean update single-host clean across-hosts test
