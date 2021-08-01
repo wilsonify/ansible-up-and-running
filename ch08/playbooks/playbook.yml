@@ -6,7 +6,7 @@
   tasks:
     - name: test of filter plugin
       template:
-        src: example.j2
+        src: example-8-10.j2
         dest: ./example.txt
         mode: 0644
 
