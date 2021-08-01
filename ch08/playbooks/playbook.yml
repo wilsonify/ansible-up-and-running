@@ -1,0 +1,16 @@
+#!/usr/bin/env ansible-playbook --ask-vault-pass
+---
+- name: chapter 8 example 11
+  hosts: all
+
+  tasks:
+    - name: test of filter plugin
+      debug:
+        msg: "[{{ domains|surround_by_quotes|join(', ') }}]"
+
+- name: test of ansible vault
+  hosts: all
+
+  tasks:
+    - name: test of ansible vault
+      debug: var=secret_key
