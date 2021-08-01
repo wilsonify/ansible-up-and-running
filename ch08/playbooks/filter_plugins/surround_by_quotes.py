@@ -1,9 +1,14 @@
-# From https://stackoverflow.com/a/15515929/742
+''' From https://stackoverflow.com/a/15515929/742 '''
 
-def surround_by_quotes(a_list):
-   return ['"%s"' % an_element for an_element in a_list]
 
-class FilterModule(object):
+class FilterModule():
+    ''' FilterModule class must have a method named filters '''
+    @staticmethod
+    def surround_by_quotes(a_list):
+        ''' implements surround_by_quotes for each list element '''
+        return ['"%s"' % an_element for an_element in a_list]
+
     def filters(self):
-        return {'surround_by_quotes': surround_by_quotes}
-
+        ''' returns a dictionary that maps filter names to
+        callables implementing the filter '''
+        return {'surround_by_quotes': self.surround_by_quotes}
