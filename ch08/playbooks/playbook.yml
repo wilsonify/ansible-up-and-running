@@ -5,8 +5,10 @@
 
   tasks:
     - name: test of filter plugin
-      debug:
-        msg: "[{{ domains|surround_by_quotes|join(', ') }}]"
+      template:
+        src: example.j2
+        dest: ./example.txt
+        mode: 0644
 
 - name: test of ansible vault
   hosts: all

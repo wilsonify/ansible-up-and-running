@@ -1,4 +1,4 @@
 ---
 domains:
-  - 192.168.33.10.nip.io
-  - www.192.168.33.10.nip.io
+  - example.com
+  - www.example.com
