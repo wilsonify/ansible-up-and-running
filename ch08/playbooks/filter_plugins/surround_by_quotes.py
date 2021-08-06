@@ -1,4 +1,4 @@
-''' From https://stackoverflow.com/a/15515929/742 '''
+''' https://stackoverflow.com/a/68610557/571517 '''
 
 
 class FilterModule():
@@ -12,3 +12,4 @@ class FilterModule():
         ''' returns a dictionary that maps filter names to
         callables implementing the filter '''
         return {'surround_by_quotes': self.surround_by_quotes}
+
