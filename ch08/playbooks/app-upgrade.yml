@@ -12,6 +12,5 @@
       rescue:
         - name: Revert a VM to the snapshot after a failed upgrade
 
-      always:
-        - name: Re-add webserver to the loadbalancer
-        - name: Remove a VM snapshot
+    - name: Re-add webserver to the loadbalancer
+    - name: Remove a VM snapshot
