@@ -71,7 +71,7 @@
         dest: "{{ proj_path }}"
         version: master
         accept_hostkey: true
-        update: false§
+        update: false
 
     - name: create python3 virtualenv
       pip:
