@@ -65,6 +65,8 @@
         state: directory
         mode: 0755
 
+    ### run this when you run into permission problems:
+    # $  ssh-keygen -R 192.168.33.10
     - name: check out the repository on the host
       git:
         repo: "{{ repo_url }}"
