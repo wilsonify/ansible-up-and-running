@@ -1,3 +1,3 @@
 # Chapter 8
 
-The secrets.yml file is encrypted. The password is `password`
+Just run the playbook.yml, the vault file is encrypted. The password is `password`
