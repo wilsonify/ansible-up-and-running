@@ -20,6 +20,10 @@
     - name: gather facts
       setup:
 
+    - name: display eth1 ip-address
+      debug:
+        msg: "{{ ansible_eth1.ipv4.address }} {{ inventory_hostname }}"
+
 - hosts: strategies
   connection: local
   strategy: free
