@@ -13,5 +13,6 @@ pre-commit
 pycodestyle
 pyflakes
 pylint
+python-vagrant
 requests==2.25.1
 yamllint==1.26.1
