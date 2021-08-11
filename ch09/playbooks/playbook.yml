@@ -32,11 +32,17 @@
     - name: first task
       command: sleep "{{ sleep_seconds }}"
       changed_when: false
+      tags:
+        - first
 
     - name: second task
       command: sleep "{{ sleep_seconds }}"
       changed_when: false
+      tags:
+        - second
 
     - name: third task
       command: sleep "{{ sleep_seconds }}"
       changed_when: false
+      tags:
+        - third

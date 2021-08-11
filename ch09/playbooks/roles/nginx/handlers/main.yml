@@ -7,6 +7,8 @@
   notify:
     - check nginx configuration
     - restart nginx - after config check
+  listen: ssl_certs_changed
+
 
 - name: reload nginx
   debug:
@@ -15,6 +17,7 @@
   notify:
     - check nginx configuration
     - reload nginx - after config check
+  listen: ssl_certs_changed
 
 - name: check nginx configuration
   command: "nginx -t"
