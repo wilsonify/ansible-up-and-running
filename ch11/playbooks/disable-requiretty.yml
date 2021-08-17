@@ -1,11 +1,13 @@
 ---
 - name: do not require tty for ssh-ing user
-  hosts: myhosts
+  hosts: vagrant
   sudo: True
   tasks:
     - name: Set a sudoers file to disable tty
       template: >
-        src=templates/disable-requiretty.j2
-        dest=/etc/sudoers.d/disable-requiretty
-        owner=root group=root mode=0440
+        src: disable-requiretty.j2
+        dest: /etc/sudoers.d/disable-requiretty
+        owner: root
+        group: root
+        mode: 0440
         validate="visudo -cf %s"

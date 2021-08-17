@@ -1,19 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Use the same key for each machine
   config.ssh.insert_key = false
 
-  config.vm.define "vagrant1" do |vagrant1|
-    vagrant1.vm.box = "ubuntu/trusty64"
-    vagrant1.vm.network "private_network", ip: "192.168.35.10"
+  config.vm.define "ubuntu" do |ubuntu|
+    ubuntu.vm.box = "ubuntu/focal64"
+    ubuntu.vm.hostname = "ubuntu.192.168.11.10.nip.io"
+    ubuntu.vm.network "private_network", ip: "192.168.11.10"
+    ubuntu.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "ubuntu"
+      virtualbox.customize ["modifyvm", :id, "--memory", "1024"]
+    end
   end
-  config.vm.define "vagrant2" do |vagrant2|
-    vagrant2.vm.box = "ubuntu/trusty64"
-    vagrant2.vm.network "private_network", ip: "192.168.35.11"
+
+  config.vm.define "fedora" do |fedora|
+    fedora.vm.box = "fedora/34-cloud-base"
+    fedora.vm.hostname = "fedora.192.168.11.11.nip.io"
+    fedora.vm.network "private_network", ip: "192.168.11.11"
+	fedora.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "fedora"
+      virtualbox.customize ["modifyvm", :id, "--memory", "1024"]
+    end
   end
-  config.vm.define "vagrant3" do |vagrant3|
-    vagrant3.vm.box = "ubuntu/trusty64"
-    vagrant3.vm.network "private_network", ip: "192.168.35.12"
+
+  config.vm.define "debian" do |debian|
+    debian.vm.box = "debian/buster64"
+    debian.vm.hostname = "debian.192.168.11.12.nip.io"
+    debian.vm.network "private_network", ip: "192.168.11.12"
+	debian.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "debian"
+      virtualbox.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+  end
+
+  config.vm.define "centos" do |centos|
+    centos.vm.box = "centos/7"
+    centos.vm.hostname = "centos.192.168.11.13.nip.io"
+    centos.vm.network "private_network", ip: "192.168.11.13"
+	centos.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "centos"
+      virtualbox.customize ["modifyvm", :id, "--memory", "1024"]
+    end
   end
 end

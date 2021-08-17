@@ -1,0 +1,11 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: improve ssh setup
+  hosts: vagrant
+  become: true
+  gather_facts: false
+  vars:
+
+  roles:
+    - role: ssh
+      crypto_settings: faster.yml
