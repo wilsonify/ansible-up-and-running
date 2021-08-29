@@ -1,0 +1,8 @@
+---
+
+- name: render /etc/goss.d/goss.yaml
+  become: true
+  command: /usr/local/bin/render-goss
+  listen: goss
+  tags:
+    - ssh

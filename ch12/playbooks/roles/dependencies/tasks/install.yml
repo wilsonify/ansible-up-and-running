@@ -1,0 +1,14 @@
+---
+
+- name: "check {{ item.name }}"
+  stat:
+    path: "{{ item.binary }}"
+  register: binary
+
+- name: "install {{ item.name }}"
+  become: true
+  async: 500
+  poll: 0
+  package:
+    name: "{{ item.package }}"
+  when: "not binary.stat.exists"
