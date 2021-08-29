@@ -2,11 +2,14 @@
 
 - name: setup
   setup:
+  tags:
+    - ssh
 
 - name: include OS specific variables
   include_vars: "{{ ansible_distribution }}.yml"
   tags:
-    - linux
+    - ssh
+    - goss
 
 - name: print out operating system details
   debug:
@@ -18,13 +21,30 @@
       {{ ansible_distribution_version }},
       sshd_policy_file:
       {{ sshd_policy_file }}
+      crypto: {{ crypto_settings }}
   tags:
-    - linux
+    - ssh
 
 - name: load crypto vars
   include_vars: "{{ crypto_settings }}"
   tags:
-    - linux
+    - ssh
+    - crypto
+    - goss
+
+- name: copy Goss template to remote
+  become: true
+  template:
+    src: test_sshd.yaml
+    dest: "{{ goss_test_directory|default('/etc/goss.d', true) }}/"
+    owner: "{{ goss_user|default('root', true) }}"
+    group: "{{ goss_group|default('users', true) }}"
+    mode: 0644
+  notify: goss
+  tags:
+    - ssh
+    - crypto
+    - goss
 
 - name: change ssh key to ed25519
   authorized_key:
@@ -32,9 +52,10 @@
     key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
     exclusive: true
   tags:
-    - linux
+    - ssh
 
 - name: set permissions
+  become: true
   file:
     owner: root
     group: root
@@ -42,9 +63,10 @@
     mode: "{{ sshd_policy_mode }}"
     state: touch
   tags:
-    - linux
+    - ssh
 
 - name: improve SSHd Ciphers
+  become: true
   lineinfile:
     dest: "{{ sshd_policy_file }}"
     regexp: '^Ciphers'
@@ -52,9 +74,11 @@
     state: present
   notify: restart sshd
   tags:
-    - ciphers
+    - ssh
+    - crypto
 
 - name: improve SSHd KexAlgorithms
+  become: true
   lineinfile:
     dest: "{{ sshd_policy_file }}"
     regexp: '^KexAlgorithms'
@@ -62,9 +86,11 @@
     state: present
   notify: restart sshd
   tags:
-    - kex
+    - ssh
+    - crypto
 
 - name: improve SSHd MACs
+  become: true
   lineinfile:
     dest: "{{ sshd_policy_file }}"
     regexp: '^MACs'
@@ -72,9 +98,11 @@
     state: present
   notify: restart sshd
   tags:
-    - hostkey
+    - ssh
+    - crypto
 
 - name: improve SSHd HostKeyAlgorithms
+  become: true
   lineinfile:
     dest: "{{ sshd_policy_file }}"
     regexp: '^HostKeyAlgorithms'
@@ -82,26 +110,40 @@
     state: present
   notify: restart sshd
   tags:
-    - hostkey
+    - ssh
+    - crypto
 
 - name: check the ed25519 host key
+  become: true
   stat:
     path: /etc/ssh/ssh_host_ed25519_key
   register: ed25519
+  tags:
+    - ssh
+    - crypto
 
 - name: generate ed25519 host key
+  become: true
   command: ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
   when:
     - not ed25519.stat.exists|bool
   notify: restart sshd
   changed_when: true
+  tags:
+    - ssh
+    - crypto
 
 - name: set permissions
+  become: true
   file:
     path: /etc/ssh/ssh_host_ed25519_key
     mode: 0600
+  tags:
+    - ssh
+    - crypto
 
 - name: configure ed25519 host key
+  become: true
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^HostKey /etc/ssh/ssh_host_ed25519_key'
@@ -110,19 +152,34 @@
     mode: 0600
     state: present
   notify: restart sshd
+  tags:
+    - ssh
+    - crypto
 
 - name: disable weak host keys
+  when: weak_host_keys|length >= 1
   include_tasks: weak_keys.yml
   loop: "{{ weak_host_keys }}"
+  tags:
+    - ssh
+    - crypto
 
 - name: check if /etc/ssh/moduli contains weak Diffie-Hellman moduli
+  become: true
   shell: awk '$5 < 2048' /etc/ssh/moduli
   register: sshd_register_moduli
   changed_when: false
+  no_log: true
   check_mode: false
+  tags:
+    - ssh
+    - crypto
 
 - name: deactivate short Diffie-Hellman moduli
+  become: true
   when: sshd_register_moduli.stdout
-  shell: "awk '$5 >= 2048' /etc/ssh/moduli > /etc/ssh/moduli.safe && mv -f /etc/ssh/moduli.safe /etc/ssh/moduli"
+  shell: "awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.safe && mv -f /etc/ssh/moduli.safe /etc/ssh/moduli"
   tags:
     - skip_ansible_lint
+    - tags
+    - crypto

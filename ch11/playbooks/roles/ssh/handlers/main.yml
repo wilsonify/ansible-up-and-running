@@ -6,14 +6,24 @@
   changed_when: true
   notify:
     - check sshd configuration
+    - goss
     - restart sshd - after config check
 
 - name: check sshd configuration
+  become: true
   command: '/usr/sbin/sshd -t'
   register: sshd_config
   changed_when: "sshd_config.rc != 0"
 
 - name: restart sshd - after config check
+  become: true
   service:
     name: sshd
     state: restarted
+
+- name: goss
+  debug:
+    msg: "goss template changed"
+  listen: goss
+  tags:
+    - ssh

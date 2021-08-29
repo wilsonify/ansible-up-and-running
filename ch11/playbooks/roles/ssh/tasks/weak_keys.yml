@@ -1,6 +1,7 @@
 ---
 
 - name: remove weak keys from config
+  become: true
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: 'HostKey /etc/ssh/{{ item }}'
@@ -9,12 +10,14 @@
   notify: restart sshd
 
 - name: "check weak key presence for {{ item }}"
+  become: true
   stat:
     path: "/etc/ssh/{{ item }}"
   register:
     weak_key_found
 
 - name: "disable weak host key {{ item }}"
+  become: true
   when:
     - weak_key_found.stat.exists is defined
     - weak_key_found.stat.exists|bool
