@@ -6,7 +6,6 @@
   changed_when: true
   notify:
     - check sshd configuration
-    - goss
     - restart sshd - after config check
 
 - name: check sshd configuration
