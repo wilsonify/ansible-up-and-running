@@ -85,10 +85,29 @@
         index_var: i
         pause: 3
 
+    - name: Iterate over lines in a file
+      say:
+        msg: "{{ item }}."
+      with_lines:
+        - cat files/turing.txt
+
+
 - name: chapter 8 examples
   hosts: web
+  vars:
+    list_of_packages:
+      - git
+      - python3
 
   tasks:
+
+    - name: install packages
+      become: true
+      package:
+        name: "{{ list_of_packages }}"
+        state: present
+
+
     - name: add public keys to account
       become: true
       authorized_key:
@@ -110,7 +129,6 @@
         key_options: 'from="10.0.2.2"'
         exclusive: true
       with_file: "{{ '~/.ssh/id_ed25519.pub' }}"
-
 
     - name: Add users
       become: true
