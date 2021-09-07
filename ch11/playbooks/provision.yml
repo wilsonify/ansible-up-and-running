@@ -34,7 +34,6 @@
       include_role:
         name: goss
         tasks_from: install
-
       tags:
         - goss
 
