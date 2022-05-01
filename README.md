@@ -9,3 +9,5 @@ in the book, since the book always assumes a playbooks directory.
 
 If you encounter any problems with these samples, please submit a GitHub issue
 or a pull request against this repository.
+
+Readers of the [Early Release on the O'Reilly site](https://learning.oreilly.com/library/view/ansible-up-and/9781098109141/) should checkout the branch 3rd-edition.
