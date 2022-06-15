@@ -30,7 +30,9 @@ f.each do |g|
     s.vm.box = g['box']
     s.vm.hostname = g['name']
     s.vm.network 'private_network', ip: g['ip_addr']
-    s.vm.network :forwarded_port, host: g['forwarded_port'], guest: g['app_port']
+    s.vm.network :forwarded_port,
+      host: g['forwarded_port'],
+      guest: g['app_port']
     # set no_share to false to enable file sharing
     s.vm.synced_folder ".", "/vagrant", disabled: g['no_share']
     s.vm.provider :virtualbox do |virtualbox|
