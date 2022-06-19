@@ -1,10 +1,4 @@
 ---
 - src: geerlingguy.java
   name: java
-
-- src: https://github.com/ansiblebook/ansible_role_ssh.git
-  name: ssh
-
-- src: https://github.com/ansiblebook/ansible_role_web.git
-  name: web
 ...
