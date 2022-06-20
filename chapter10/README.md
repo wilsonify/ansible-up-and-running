@@ -1,6 +1,6 @@
 # Chapter 8
 
-Install python dependencies listen in the `requirements.txt` file:
+Install python dependencies listed in the `requirements.txt` fil into a Python 3 virtualenv.
 
 ```
 python3 -mvenv py3
@@ -11,4 +11,4 @@ pip3 install -r playbooks/requirements.txt
 cd playbooks
 ```
 
-Just run the playbook.yml, the vault file is encrypted. The password is `password`
+Then just run the playbook.yml, the vault file is encrypted. The password is `password`
