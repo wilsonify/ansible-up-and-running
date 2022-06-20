@@ -8,8 +8,6 @@
   vars_prompt:
     - name: username
       prompt: Enter Docker Registry username
-    - name: email
-      prompt: Enter Docker Registry email
     - name: password
       prompt: Enter Docker Registry password
       private: true
@@ -19,7 +17,6 @@
     - name: Authenticate with repository
       docker_login:
         username: "{{ username }}"
-        email: "{{ email }}"
         password: "{{ password }}"
       tags:
         - login
