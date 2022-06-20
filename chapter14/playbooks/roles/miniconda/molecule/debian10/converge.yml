@@ -4,4 +4,4 @@
   vars:
     install_miniconda: true
   roles:
-    - role: miniconda
+    - role: ansiblebook.miniconda

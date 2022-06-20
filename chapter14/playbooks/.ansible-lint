@@ -1,4 +1,3 @@
 skip_list:
   - experimental
   - fqcn-builtins  # See chapter 15
-  - unamed-task
