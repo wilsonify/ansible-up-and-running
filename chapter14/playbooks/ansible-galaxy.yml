@@ -20,11 +20,12 @@
       template:
         src: roles/requirements.yml
         dest: "{{ tempdir.path }}/requirements.yml"
+        mode: '0644'
       notify: Cleanup tempdir
 
     - name: Galaxy requirements
       set_fact:
-        repos: "{{ repos|d([]) + (lookup('file', requirements)|from_yaml) }}"
+        repos: "{{ repos | d([]) + (lookup('file', requirements) | from_yaml) }}"
       vars:
         requirements: "{{ tempdir.path }}/requirements.yml"
 
