@@ -3,12 +3,10 @@
 - name: Run ansible-lint with the roles
   hosts: all
   gather_facts: true
-  become: yes
+  become: true
 
   roles:
     - ssh
     - miniconda
     - redis
-
-
-
+...
