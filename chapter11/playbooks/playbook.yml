@@ -8,6 +8,16 @@
 
   tasks:
 
+    - name: Download goss binary
+      delegate_to: localhost
+      connection: local
+      become: false
+      get_url:
+        url: "https://github.com/aelsabbahy/goss/releases/download/v0.3.18/goss-linux-amd64"
+        dest: "~/Downloads/goss"
+        mode: '0755'
+      ignore_errors: true
+
     - name: wait for web ssh daemon to be running
       wait_for:
         port: 22

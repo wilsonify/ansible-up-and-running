@@ -33,4 +33,10 @@ Vagrant.configure("2") do |this|
       virtualbox.name = "prod"
     end
   end
+  this.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+    ansible.verbose = "v"
+    ansible.compatibility_mode = "2.0"
+    ansible.host_key_checking = false
+  end
 end

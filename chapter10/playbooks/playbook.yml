@@ -1,18 +1,18 @@
 #!/usr/bin/env ansible-playbook --ask-vault-pass
 ---
 
-- name: Chapter 8 examples
+- name: Chapter 10 examples
   hosts: localhost
   connection: local
 
   tasks:
     - name: Test of filter plugin
       template:
-        src: example-8-10.j2
+        src: example-10-10.j2
         dest: ./example.txt
         mode: 0644
 
-- name: Chapter 8 examples
+- name: Chapter 10 examples
   hosts: dev,prod
 
   tasks:
@@ -51,7 +51,7 @@
       debug:
         msg: "{{ lookup('template', 'message.j2') }}"
 
-- name: More examples from chapter 8
+- name: More examples from chapter 10
   hosts: localhost
   connection: local
 
@@ -91,7 +91,7 @@
       with_lines:
         - cat files/turing.txt
 
-- name: Chapter 8 examples
+- name: Chapter 10 examples
   hosts: dev,prod
   vars:
     list_of_packages:
