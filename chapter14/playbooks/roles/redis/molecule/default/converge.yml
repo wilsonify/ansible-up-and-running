@@ -34,7 +34,7 @@
         # host: "{{ groups.redis_master[0] }}"
         host: "{{ master_hostname }}"
         port: "{{ redis_host }}"
-        quorum: "{{ groups.redis_server|length -1 }}"
+        quorum: "{{ groups.redis_server | length -1 }}"
   roles:
     - {role: redis, tags: sentinel}
 ...
