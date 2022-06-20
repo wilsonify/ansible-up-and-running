@@ -8,7 +8,8 @@
   tags:
     - list
 
-- block:
+- name: Environments
+  block:
     - name: Check if conda environments are present
       stat:
         path: "{{ miniconda_envsdir }}/{{ item.name }}"
@@ -25,7 +26,6 @@
       loop_control:
         index_var: i
       tags:
-        - miniconda
         - list
 
     - name: Update conda envs that are present

@@ -8,7 +8,8 @@
     - ansible_os_family == 'Darwin'
 
 # Debian Linux
-- block:
+- name: Debian
+  block:
     - name: Install conda apt gpg key
       apt_key:
         state: present
@@ -22,7 +23,8 @@
     - ansible_os_family == 'Debian'
 
 # RedHat Linux
-- block:
+- name: RedHat
+  block:
     - name: Install conda rpm gpg key
       rpm_key:
         state: present
@@ -45,7 +47,8 @@
     state: present
   when: ansible_os_family in ['RedHat', 'Debian']
 
-- block:
+- name: Dependencies
+  block:
     - name: Install package dependencies for miniconda installation
       package:
         name: bzip2
@@ -88,7 +91,8 @@
   when: ansible_os_family == 'Debian'
 
 # Windows
-- block:
+- name: Windows
+  block:
 
     - name: Ensure download directory exists on windows
       win_file:
