@@ -11,8 +11,19 @@ ansible:
     - "true"
     - "false"
 rules:
+  exclude_filter:
+    - ANSIBLE0015
   exclude_files:
     - molecule/
     - files/conda-envs/
     - requirements.txt
+
+  named-task:
+    exclude:
+      - 'meta'
+      - 'debug'
+
+  native-yaml:
+    exclude:
+      - 'debug'
 ...
