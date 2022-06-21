@@ -11,7 +11,6 @@
         state: present
         username: "{{ lookup('env','RH_USER') }}"
         password: "{{ lookup('env','RH_PASS') }}"
-        pool_ids: "{{ lookup('env','RH_POOL') }}"
         syspurpose:
           role: "Red Hat Enterprise Server"
           usage: "Development/Test"
