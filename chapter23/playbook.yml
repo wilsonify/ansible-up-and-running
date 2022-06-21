@@ -32,13 +32,6 @@
   become: true
   gather_facts: true
 
-  pre_tasks:
-
-    - name: Set vars
-      set_fact:
-        registry_username: "{{ lookup('env','RH_USER') }}"
-        registry_password: "{{ lookup('env','RH_PASS') }}"
-
   roles:
     - {role: aap, tags: aap}
 

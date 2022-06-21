@@ -1,8 +1,8 @@
 ---
 
-- name: Copy setup_bundle from ~/Downloads
-  copy:
-    src: "~/Downloads/{{ setup_bundle }}"
+- name: Download setup_bundle
+  get_url:
+    url: "https://releases.ansible.com/ansible-tower/setup/{{ setup_bundle }}"
     dest: '~'
     mode: 0644
   tags:
