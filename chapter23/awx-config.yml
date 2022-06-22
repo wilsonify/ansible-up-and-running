@@ -7,7 +7,7 @@
   gather_facts: false
 
   vars:
-    awx_host: "{{ groups.automationcontroller[0] }}"
+    awx_host: "{{ groups.tower[0] }}"
     # yamllint disable-line rule:line-length
     cfg: "-k --conf.host https://{{ awx_host }} --conf.user {{ awx_user | default('admin', true) }}"
 

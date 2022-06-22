@@ -2,6 +2,14 @@
 
 This project creates 3 RHEL8 VMs with Vagrant/Virtualbox. The ansible provisioner will install Ansible Automation Platform 2 from your local ~/Downloads/.
 
+## Prerequisites
+
+This example needs login credentials for a developer account at Red Hat.
+```
+export RH_USER=<some-id>
+export RH_PASS=<a-password>
+```
+
 ## Usage:
 - If you have a Mac with Homebrew, then you can install what's in the Brewfile with `brew bundle`
 - Open the web page [https://www.ansible.com/zero-to-100](https://www.ansible.com/zero-to-100)

@@ -28,7 +28,7 @@
   roles:
     - {role: ssh_keys, tags: ssh_keys}
 
-- hosts: automationcontroller
+- hosts: tower
   become: true
   gather_facts: true
 
