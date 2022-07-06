@@ -20,8 +20,8 @@ Vagrant.configure("2") do |config|
     host_config.vm.box = "centos/7"
     host_config.vm.hostname = "bastion"
     host_config.vm.network "private_network", ip: "192.168.56.20"
-    host_config.vm.network "forwarded_port", id: 'ssh', guest: 22, host: 2220, auto_correct: false
-    host_config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
+    host_config.vm.network "forwarded_port", id: 'ssh', guest: 22, host: 2220
+    host_config.vm.synced_folder ".", "/vagrant", disabled: true
     host_config.vm.provider "virtualbox" do |vb|
       vb.name = "bastion"
       vb.customize ["modifyvm", :id, "--memory", 2048]
