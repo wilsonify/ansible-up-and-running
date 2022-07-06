@@ -17,9 +17,9 @@
 
     - name: Create certs
       command: >
-        opensst req -new -x509 -nodes
+        openssl req -new -x509 -nodes
         -out certs/nginx.crt -keyout certs/nginx.key
-        -subj '/CN=localhost' -days 3650
+        -subj '/CN=localhost' -days 365
       args:
         creates: certs/nginx.crt
 
