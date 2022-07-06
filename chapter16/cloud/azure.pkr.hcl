@@ -66,7 +66,10 @@ build {
 
   provisioner "shell" {
     execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
-    inline          = ["/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"]
+    inline = [
+      "/usr/sbin/waagent -force -deprovision+user",
+      "sync"
+    ]
     inline_shebang  = "/bin/sh -x"
   }
 
