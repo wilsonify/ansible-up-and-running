@@ -11,7 +11,12 @@ source "docker" "gcc" {
   changes     = ["CMD [\"/bin/bash\"]", "ENTRYPOINT [\"\"]"]
   commit = true
   image  = "centos:7"
-  run_command = ["-d", "-i", "-t", "--network=host", "--entrypoint=/bin/sh", "--", "{{ .Image }}"]
+  run_command = [
+    "-d", "-i", "-t",
+    "--network=host",
+    "--entrypoint=/bin/sh",
+    "--", "{{ .Image }}"
+  ]
 }
 
 build {
