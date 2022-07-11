@@ -14,7 +14,9 @@ variable "iso_checksum" {
 }
 
 source "virtualbox-iso" "rhel8" {
-  boot_command           = ["<tab> text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"]
+  boot_command = [
+    "<tab> text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+    ]
   boot_wait              = "5s"
   cpus                   = 2
   disk_size              = 65536
