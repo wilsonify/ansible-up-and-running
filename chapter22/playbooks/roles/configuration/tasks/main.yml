@@ -12,7 +12,7 @@
 - name: Create Job DSL plugin seed job
   template:
     src: jobs.groovy.j2
-    dest: /home/jenkins/jobs.groovy
+    dest: /var/lib/jenkins/jobs.groovy
     owner: jenkins
     mode: 0750
 
@@ -35,8 +35,11 @@
 - name: Enable configuration as code
   lineinfile:
     dest: /etc/sysconfig/jenkins
-    regexp: '^JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true"'
-    line: 'JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Dcasc.jenkins.config=/var/lib/jenkins/casc_configs"'
+    regexp: '^JENKINS_JAVA_OPTIONS='
+    line: >-
+      JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true
+      -Djenkins.install.runSetupWizard=false
+      -Dcasc.jenkins.config={{ casc_configs }}"
     state: present
     mode: 0600
   notify: Restart Jenkins
