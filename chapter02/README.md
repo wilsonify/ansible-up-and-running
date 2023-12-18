@@ -1,4 +1,4 @@
-# Chapter 18 Vagrant
+# Chapter 2 Installation and Setup
 
 ## local
 
