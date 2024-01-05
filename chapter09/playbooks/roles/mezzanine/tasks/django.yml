@@ -44,7 +44,7 @@
     src: supervisor.conf.j2
     dest: /etc/supervisor/conf.d/mezzanine.conf
     mode: 0640
-  notify: restart supervisor
+  notify: Restart supervisor
 
 - name: Install poll twitter cron job
   cron:
