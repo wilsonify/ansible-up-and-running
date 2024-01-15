@@ -12,4 +12,6 @@ services:
       - ghost
   ghost:
     image: ghost
+    environment:
+      NODE_ENV: development
 ...
