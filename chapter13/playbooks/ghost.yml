@@ -3,6 +3,8 @@
 - name: Run Ghost locally
   hosts: localhost
   gather_facts: false
+  vars:
+    ansible_python_interpreter: ../py3/bin/python
   tasks:
 
     - name: Create Nginx image
@@ -14,6 +16,12 @@
         state: present
         force_source: "{{ force_source | default(false) }}"
         tag: "{{ tag | default('v1') }}"
+
+    - name: Create certs directory
+      file:
+        path: "./certs"
+        state: directory
+        mode: 0750
 
     - name: Create certs
       command: >
