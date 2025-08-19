@@ -17,3 +17,5 @@ ch13/output-rhel8
 ch17/collections/ansible_collections
 *.retry
 *.pyc
+.idea/
+.vscode/
