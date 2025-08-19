@@ -18,17 +18,18 @@ jobs:
 
       - name: Setup environment
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade setuptools          
-          python3 -m pip install --upgrade wheel
-          python3 -m pip install --upgrade pyinstaller       
+          python3 -m pip install --upgrade pip setuptools wheel pyinstaller
 
-      - name: Clone Ansible
+      - name: Clone Ansible v2.19.0
         working-directory: c01-introduction
         run: |
-          git clone https://github.com/ansible/ansible.git --recursive          
-          python3 -m pip install -r ansible/requirements.txt
-          cp build.spec ansible/build.spec
+          git clone https://github.com/ansible/ansible.git --recursive
+          cd ansible
+          git checkout v2.19.0
+          git submodule update --init --recursive
+          python3 -m pip install -e .
+          python3 -m pip install -r requirements.txt
+          cp ../build.spec ./build.spec
 
       - name: Source env-setup
         working-directory: c01-introduction/ansible
@@ -39,8 +40,18 @@ jobs:
         working-directory: c01-introduction/ansible
         run: pyinstaller build.spec
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Archive build outputs
+        run: |
+          cd c01-introduction/ansible/dist
+          tar -czf ansible-bundle-v2.19.0.tar.gz ansible-bundle
+          mv ansible-bundle-v2.19.0.tar.gz $GITHUB_WORKSPACE/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: ansible-dist
-          path: c01-introduction/ansible/dist
+          tag_name: v2.19.0
+          name: "Ansible PyInstaller v2.19.0"
+          files: |
+            ansible-bundle-v2.19.0.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
