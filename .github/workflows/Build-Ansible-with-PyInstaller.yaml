@@ -1,0 +1,44 @@
+name: Build Ansible with PyInstaller
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup environment
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade setuptools          
+          python3 -m pip install --upgrade wheel
+          python3 -m pip install --upgrade pyinstaller       
+
+      - name: Clone Ansible
+        run: |
+          git clone https://github.com/ansible/ansible.git --recursive          
+          python3 -m pip install -r ansible/requirements.txt
+
+      - name: Source env-setup
+        working-directory: ansible
+        run: source hacking/env-setup
+        shell: bash
+
+      - name: Run PyInstaller build
+        working-directory: ansible
+        run: pyinstaller build.spec
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ansible-dist
+          path: ansible/dist/
