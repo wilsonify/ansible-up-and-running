@@ -24,21 +24,23 @@ jobs:
           python3 -m pip install --upgrade pyinstaller       
 
       - name: Clone Ansible
+        working-directory: c01-introduction
         run: |
           git clone https://github.com/ansible/ansible.git --recursive          
           python3 -m pip install -r ansible/requirements.txt
+          cp build.spec ansible/build.spec
 
       - name: Source env-setup
-        working-directory: ansible
+        working-directory: c01-introduction/ansible
         run: source hacking/env-setup
         shell: bash
 
       - name: Run PyInstaller build
-        working-directory: ansible
+        working-directory: c01-introduction/ansible
         run: pyinstaller build.spec
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ansible-dist
-          path: ansible/dist/
+          path: c01-introduction/ansible/dist
