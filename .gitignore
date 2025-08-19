@@ -19,3 +19,4 @@ ch17/collections/ansible_collections
 *.pyc
 .idea/
 .vscode/
+*.pdf
