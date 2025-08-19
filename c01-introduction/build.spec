@@ -1,13 +1,17 @@
-# build.spec - PyInstaller build for ansible-core
+# build.spec - PyInstaller build for ansible-core with --collect-all
 # Run with: pyinstaller build.spec
 
 import os
-from PyInstaller.utils.hooks import collect_submodules, collect_data_files
+from pathlib import Path
+from PyInstaller.utils.hooks import collect_all
 
-# Collect ansible and ansible_test packages + data
-hiddenimports = collect_submodules("ansible") + collect_submodules("ansible_test")
-datas = collect_data_files("ansible", include_py_files=True)
-datas += collect_data_files("ansible_test", include_py_files=True)
+# Collect everything for ansible and ansible_test
+datas, binaries, hiddenimports = ([], [], [])
+for pkg in ["ansible", "ansible_test"]:
+    d, b, h = collect_all(pkg)
+    datas += d
+    binaries += b
+    hiddenimports += h
 
 # Define entry points as executables
 cli_scripts = {
@@ -23,33 +27,40 @@ cli_scripts = {
     "ansible-test": "ansible_test._util.target.cli.ansible_test_cli_stub:main",
 }
 
-a = []
+executables = []
+
+# Generate stubs so PyInstaller knows the entry point
+stub_dir = Path("pyi_stubs")
+stub_dir.mkdir(exist_ok=True)
+
 for exe_name, entry in cli_scripts.items():
     module, func = entry.split(":")
-    a.append(
-        Analysis(
-            [f"-m{module}"],
-            pathex=[os.getcwd()],
-            binaries=[],
-            datas=datas,
-            hiddenimports=hiddenimports,
-            hookspath=[],
-            runtime_hooks=[],
-            excludes=[],
-            noarchive=False,
-        )
+    stub_path = stub_dir / f"{exe_name}_stub.py"
+    stub_path.write_text(
+        f"import sys\nfrom {module} import {func} as _main\n"
+        f"if __name__ == '__main__':\n"
+        f"    sys.exit(_main())\n"
     )
 
-executables = []
-for i, (exe_name, entry) in enumerate(cli_scripts.items()):
-    module, func = entry.split(":")
-    pyz = PYZ(a[i].pure, a[i].zipped_data, cipher=None)
+    a = Analysis(
+        [str(stub_path)],
+        pathex=[os.getcwd()],
+        binaries=binaries,
+        datas=datas,
+        hiddenimports=hiddenimports,
+        hookspath=[],
+        runtime_hooks=[],
+        excludes=[],
+        noarchive=False,
+    )
+
+    pyz = PYZ(a.pure, a.zipped_data, cipher=None)
     exe = EXE(
         pyz,
-        a[i].scripts,
-        a[i].binaries,
-        a[i].zipfiles,
-        a[i].datas,
+        a.scripts,
+        a.binaries,
+        a.zipfiles,
+        a.datas,
         [],
         name=exe_name,
         debug=False,
