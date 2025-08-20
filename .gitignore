@@ -20,3 +20,4 @@ ch17/collections/ansible_collections
 .idea/
 .vscode/
 *.pdf
+.env
