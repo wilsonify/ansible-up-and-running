@@ -1,43 +1,106 @@
-# Chapter 2 Installation and Setup
+# Ansible + Vagrant Integration
 
-## local
+This project demonstrates how to integrate **Vagrant** with **Ansible** using a `Makefile` for automation.  
+The setup is based on the `ansible-up-and-running` examples and extended to use a `Vagrantfile` with JSON-based
+configuration.
 
-This directory holds a simple example from the first edition of Ansible Up and Running.
+---
 
-## playbooks
+## Prerequisites
 
-This directory holds an advanced example from the third edition of Ansible Up and Running.
+Before running, make sure you have installed:
 
-Using the Vagrantfile in this directory you can spin up various VirtualBox virtual machines using Vagrant:
+- [Vagrant](https://www.vagrantup.com/downloads) (>= 2.0.0)
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads) (or another supported provider)
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+- Required Vagrant plugins:
+  ```bash
+  vagrant plugin install vagrant-hostmanager vagrant-vbguest
+  ```
 
-```yaml
-machines:
-  - bionic
-  - bullseye
-  - buster
-  - centos7
-  - centos8
-  - fedora
-  - focal
-  - hirsute
-  - impish
-  - jessie
-  - kali
-  - rocky
-  - stretch
-  - xenial
+---
+
+## File Structure
+
+```
+.
+├── Vagrantfile
+├── config.json
+├── playbook.yml
+├── roles/
+│   └── requirements.yml
+├── playbooks/
+│   └── install-vagrant.yml
+└── makefile
 ```
 
-### Provisioning
+- **Vagrantfile** — defines VMs dynamically from `config.json` and provisions them with Ansible.
+- **config.json** — defines VM attributes (name, box, IP, CPUs, RAM, etc).
+- **playbook.yml** — the main Ansible playbook applied inside VMs.
+- **roles/** — Ansible roles, installed via Galaxy (`requirements.yml`).
+- **playbooks/install-vagrant.yml** — optional bootstrap playbook for local machine setup.
+- **makefile** — automates common tasks.
 
-`vagrant provision` is automated with the ansible `playbook.yml` which installs
-the dependencies defined in `roles/requirements.yml`.
+---
 
-### Configuration
+## Example `config.json`
 
-`config.json` holds the parameters for each machine.
+```json
+{
+  "servers": [
+    {
+      "name": "web1",
+      "box": "bento/ubuntu-20.04",
+      "ip": "192.168.56.10",
+      "cpus": 2,
+      "memory": 2048
+    },
+    {
+      "name": "db1",
+      "box": "bento/ubuntu-20.04",
+      "ip": "192.168.56.11",
+      "cpus": 1,
+      "memory": 1024
+    }
+  ]
+}
+```
 
-### Inventory
+---
 
-There is a dynamic inventory in `inventory/vagrant.py`. The `vagrant-hostmaster`
-manages `/etc/hosts` on the host and guests.
+## Makefile Usage
+
+```bash
+make vagrant      # Runs the Vagrant install playbook
+make up           # Starts and provisions VMs via Vagrant + Ansible
+make halt         # Stops all Vagrant VMs
+make destroy      # Destroys all Vagrant VMs
+make clean        # Cleans up generated files and resets state
+```
+
+---
+
+## Workflow
+
+1. Edit `config.json` to define your VMs.
+2. Run:
+   ```bash
+   make up
+   ```
+3. Access VMs:
+   ```bash
+   vagrant ssh web1
+   vagrant ssh db1
+   ```
+4. Destroy when done:
+   ```bash
+   make destroy
+   ```
+
+---
+
+## Notes
+
+- Ensure your user can run Ansible with privilege escalation (passwordless `sudo` or `--ask-become-pass`).
+- Adjust the `playbook.yml` to define roles and tasks for provisioning.
+- Extend `roles/requirements.yml` for Galaxy role dependencies.

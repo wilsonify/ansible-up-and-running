@@ -1,0 +1,56 @@
+---
+- name: Install Vagrant
+  hosts: localhost
+  connection: local
+  become: yes
+  vars:
+    vagrant_version: "2.4.9"
+    vagrant_pkg_url_debian: "https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}-1_amd64.deb"
+    vagrant_pkg_url_redhat: "https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}-1.x86_64.rpm"
+
+  tasks:
+    - name: Ensure dependencies are installed (Debian)
+      apt:
+        name: curl
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Download Vagrant .deb (Debian)
+      get_url:
+        url: "{{ vagrant_pkg_url_debian }}"
+        dest: "/tmp/vagrant.deb"
+        mode: '0644'
+      when: ansible_os_family == "Debian"
+
+    - name: Install Vagrant .deb (Debian)
+      apt:
+        deb: "/tmp/vagrant.deb"
+      when: ansible_os_family == "Debian"
+
+    - name: Download Vagrant .rpm (RedHat)
+      get_url:
+        url: "{{ vagrant_pkg_url_redhat }}"
+        dest: "/tmp/vagrant.rpm"
+        mode: '0644'
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Vagrant .rpm (RedHat)
+      yum:
+        name: "/tmp/vagrant.rpm"
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Vagrant on macOS
+      homebrew:
+        name: vagrant
+        state: present
+      when: ansible_os_family == "Darwin"
+
+    - name: Verify installation
+      command: vagrant --version
+      register: vagrant_version_output
+      changed_when: false
+
+    - name: Show installed Vagrant version
+      debug:
+        msg: "Installed {{ vagrant_version_output.stdout }}"
