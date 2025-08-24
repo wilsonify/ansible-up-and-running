@@ -1,0 +1,51 @@
+---
+- name: Install Ansible-lint via pipx
+  hosts: localhost
+  connection: local
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Ensure pipx is installed (Debian/Ubuntu)
+      apt:
+        name:
+          - python3-pip
+          - pipx
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure pipx is installed (RedHat/Fedora)
+      dnf:
+        name:
+          - python3-pip
+          - python3-pipx
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure pipx binaries path is in environment
+      ansible.builtin.shell: |
+        python3 -m pipx ensurepath
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_env.USER }}/.local/bin"
+      args:
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Install ansible-lint via pipx
+      ansible.builtin.shell: |
+        pipx install ansible-lint
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_env.USER }}/.local/bin"
+      args:
+        creates: "/home/{{ ansible_env.USER }}/.local/bin/ansible-lint"
+      changed_when: false
+
+    - name: Verify ansible-lint installation
+      command: ansible-lint --version
+      register: lint_version
+      changed_when: false
+
+    - name: Show installed ansible-lint version
+      debug:
+        msg: "Installed {{ lint_version.stdout }}"
