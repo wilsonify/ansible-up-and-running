@@ -35,3 +35,30 @@ No programming expertise is required—Ansible is designed to be useful even if 
 - **Flexibility**: Integrates with existing systems, services, and third-party tools.  
 
 Whether you’re a developer deploying applications or a sysadmin maintaining infrastructure, Ansible helps you work **faster, more reliably, and with less frustration**.  
+
+
+# Why this project uses ansible-runner
+
+In this course, you’ll notice that some examples use ansible-runner instead of running ansible-playbook directly. Here’s why:
+
+Structured execution: ansible-runner organizes playbooks, inventories, and environment variables in a predictable directory structure.
+
+Reproducible environments: It helps run Ansible in isolated Python virtual environments or containers, avoiding conflicts with your system Python or installed Ansible versions.
+
+Programmatic automation: If you want to integrate Ansible runs into other tools, CI/CD pipelines, or Python scripts, ansible-runner provides a clean API for automation.
+
+Artifact collection: Captures execution logs, return codes, and JSON output in a structured way—useful for debugging or reporting.
+
+Important for beginners:
+You do not need ansible-runner to learn Ansible. All the playbooks in this course can also be run directly with ansible-playbook. ansible-runner is included here mainly to demonstrate how Ansible can be packaged for automation or containerized environments, which is useful in advanced scenarios.
+
+```mermaid
+graph TD
+    A[ansible-runner directory] --> B[project/]
+    A --> C[inventory/]
+    A --> D[env/]
+    A --> E[artifacts/]
+    B --> B1[playbook.yml]
+    C --> C1[hosts]
+    D --> D1[envvars, passwords, settings]
+```
