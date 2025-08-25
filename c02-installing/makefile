@@ -27,11 +27,12 @@ ssh: ## SSH into a VM: make ssh VM=bionic
 reload: ## Reload VM configs (useful after changing Vagrantfile)
 	vagrant reload
 
-
 roles: ## Install required Ansible Galaxy roles
-	ansible-galaxy install -r playbooks/requirements.yml -p playbooks/roles
+	ansible-galaxy install -r playbooks/roles/requirements.yml -p playbooks/roles
+	ansible-galaxy collection install community.general
+	ansible-galaxy collection install ansible.posix
 
-lint: ## Lint Ansible playbooks
+lint: roles ## Lint Ansible playbooks
 	ansible-lint playbooks/
 
 test: ## Check playbooks syntax
