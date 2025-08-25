@@ -2,7 +2,7 @@
 - name: Install Vagrant
   hosts: localhost
   connection: local
-  become: yes
+  become: true
   vars:
     vagrant_version: "2.4.9"
     vagrant_pkg_url_debian: "https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}-1_amd64.deb"
@@ -35,7 +35,7 @@
       when: ansible_os_family == "RedHat"
 
     - name: Install Vagrant .rpm (RedHat)
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: "/tmp/vagrant.rpm"
         state: present
       when: ansible_os_family == "RedHat"
