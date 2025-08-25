@@ -10,47 +10,41 @@
 
   tasks:
     - name: Ensure dependencies are installed (Debian)
-      apt:
+      ansible.builtin.apt:
         name: curl
         state: present
       when: ansible_os_family == "Debian"
 
     - name: Download Vagrant .deb (Debian)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ vagrant_pkg_url_debian }}"
         dest: "/tmp/vagrant.deb"
         mode: '0644'
       when: ansible_os_family == "Debian"
 
     - name: Install Vagrant .deb (Debian)
-      apt:
+      ansible.builtin.apt:
         deb: "/tmp/vagrant.deb"
       when: ansible_os_family == "Debian"
 
     - name: Download Vagrant .rpm (RedHat)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ vagrant_pkg_url_redhat }}"
         dest: "/tmp/vagrant.rpm"
         mode: '0644'
       when: ansible_os_family == "RedHat"
 
     - name: Install Vagrant .rpm (RedHat)
-      yum:
+      ansible.builtin.yum:
         name: "/tmp/vagrant.rpm"
         state: present
       when: ansible_os_family == "RedHat"
 
-    - name: Install Vagrant on macOS
-      homebrew:
-        name: vagrant
-        state: present
-      when: ansible_os_family == "Darwin"
-
     - name: Verify installation
-      command: vagrant --version
+      ansible.builtin.command: vagrant --version
       register: vagrant_version_output
       changed_when: false
 
     - name: Show installed Vagrant version
-      debug:
+      ansible.builtin.debug:
         msg: "Installed {{ vagrant_version_output.stdout }}"
