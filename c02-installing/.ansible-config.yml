@@ -1,4 +1,0 @@
-skip_list:
-  - 'playbooks/roles/java'
-  - 'yaml'
-  - 'role-name'
