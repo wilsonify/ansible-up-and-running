@@ -1,32 +1,18 @@
 ---
-- name: Install Ansible-lint via pipx
+- name: Install ansible-lint via pipx
   hosts: localhost
   connection: local
   become: true
-  gather_facts: true
 
   tasks:
-    - name: Ensure pipx is installed (Debian/Ubuntu)
-      when: ansible_os_family == "Debian"
-      ansible.builtin.apt:
-        update_cache: true
-        state: present
-        name:
-          - python3-pip
-          - pipx
-
-    - name: Ensure pipx is installed (RedHat/Fedora)
-      when: ansible_os_family == "RedHat"
-      ansible.builtin.dnf:
-        name:
-          - python3-pip
-          - python3-pipx
+    - name: Install dependencies
+      ansible.builtin.package:
+        name: "{{ 'python3-pip' if ansible_os_family == 'Debian' else 'python3-pip,python3-pipx' }}"
         state: present
 
-    - name: Install ansible-lint via pipx (system-wide)
+    - name: Install ansible-lint via pipx
       ansible.builtin.command: >
-        pipx install ansible-lint
-        --pip-args='--upgrade'
+        pipx install ansible-lint --pip-args='--upgrade'
       environment:
         PIPX_HOME: /usr/local/pipx
         PIPX_BIN_DIR: /usr/local/bin

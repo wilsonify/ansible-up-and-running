@@ -5,40 +5,34 @@
   become: true
   vars:
     vagrant_version: "2.4.9"
-    vagrant_pkg_url_debian: "https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}-1_amd64.deb"
-    vagrant_pkg_url_redhat: "https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}-1.x86_64.rpm"
+    vagrant_pkg_url:
+      Debian: "https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}-1_amd64.deb"
+      RedHat: "https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}-1.x86_64.rpm"
 
   tasks:
-    - name: Ensure dependencies are installed (Debian)
-      ansible.builtin.apt:
-        name: curl
+    - name: Ensure dependencies are installed
+      ansible.builtin.package:
+        name: "{{ 'curl' if ansible_os_family == 'Debian' else 'curl' }}"
         state: present
-      when: ansible_os_family == "Debian"
 
-    - name: Download Vagrant .deb (Debian)
+    - name: Download Vagrant package
       ansible.builtin.get_url:
-        url: "{{ vagrant_pkg_url_debian }}"
-        dest: "/tmp/vagrant.deb"
-        mode: '0644'
-      when: ansible_os_family == "Debian"
+        url: "{{ vagrant_pkg_url[ansible_os_family] }}"
+        dest: "/tmp/vagrant.{{ 'deb' if ansible_os_family == 'Debian' else 'rpm' }}"
+        mode: "0644"
 
-    - name: Install Vagrant .deb (Debian)
-      ansible.builtin.apt:
-        deb: "/tmp/vagrant.deb"
-      when: ansible_os_family == "Debian"
+    - name: Install Vagrant package
+      block:
+        - name: Install on Debian
+          ansible.builtin.apt:
+            deb: "/tmp/vagrant.deb"
+          when: ansible_os_family == "Debian"
 
-    - name: Download Vagrant .rpm (RedHat)
-      ansible.builtin.get_url:
-        url: "{{ vagrant_pkg_url_redhat }}"
-        dest: "/tmp/vagrant.rpm"
-        mode: '0644'
-      when: ansible_os_family == "RedHat"
-
-    - name: Install Vagrant .rpm (RedHat)
-      ansible.builtin.dnf:
-        name: "/tmp/vagrant.rpm"
-        state: present
-      when: ansible_os_family == "RedHat"
+        - name: Install on RedHat
+          ansible.builtin.dnf:
+            name: "/tmp/vagrant.rpm"
+            state: present
+          when: ansible_os_family == "RedHat"
 
     - name: Verify installation
       ansible.builtin.command: vagrant --version

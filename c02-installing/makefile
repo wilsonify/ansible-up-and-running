@@ -28,7 +28,6 @@ reload: ## Reload VM configs (useful after changing Vagrantfile)
 	vagrant reload
 
 roles: ## Install required Ansible Galaxy roles
-	ansible-galaxy install -r playbooks/roles/requirements.yml -p playbooks/roles
 	ansible-galaxy collection install community.general
 	ansible-galaxy collection install ansible.posix
 

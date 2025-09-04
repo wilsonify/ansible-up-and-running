@@ -1,0 +1,29 @@
+- name: Play to test ansible roles
+  hosts: all:!localhost
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Placeholder for future roles
+      ansible.builtin.debug:
+        msg: "No roles applied in this run."
+
+    - name: Install OpenJDK on Debian/Ubuntu
+      ansible.builtin.package:
+        name: openjdk-17-jdk
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install OpenJDK on RedHat/CentOS/Fedora
+      ansible.builtin.package:
+        name: java-17-openjdk
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Verify Java installation
+      ansible.builtin.command: java -version
+      register: java_version
+      changed_when: false
+
+    - name: Show installed Java version
+      ansible.builtin.debug:
+        msg: "{{ java_version.stderr_lines | default(java_version.stdout_lines) }}"
