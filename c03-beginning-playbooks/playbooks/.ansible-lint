@@ -1,3 +1,0 @@
-skip_list:
-  - experimental
-  - fqcn-builtins  # See chapter 15

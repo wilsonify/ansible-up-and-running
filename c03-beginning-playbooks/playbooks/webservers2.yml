@@ -1,29 +1,33 @@
-#!/usr/bin/env ansible-playbook
 ---
 - name: Configure webserver with nginx
-  hosts: webservers
+  hosts: localhost
+  connection: local
   become: true
+  gather_facts: true
+
+  vars:
+    conf_file: /etc/nginx/sites-available/default
 
   tasks:
     - name: Ensure nginx is installed
-      package:
+      ansible.builtin.package:
         name: nginx
+        state: present
         update_cache: true
 
-    - name: Manage nginx config file
-      copy:
-        src: nginx.conf
-        dest: /etc/nginx/sites-available/default
-        mode: 0644
+    - name: Copy nginx config file
+      ansible.builtin.copy:
+        src: playbooks/files/nginx.conf
+        dest: "{{ conf_file }}"
+        mode: "0644"
 
     - name: Copy home page template
-      template:
-        src: index.html.j2
+      ansible.builtin.template:
+        src: playbooks/templates/index.html.j2
         dest: /usr/share/nginx/html/index.html
-        mode: 0644
+        mode: "0644"
 
     - name: Restart nginx
-      service:
+      ansible.builtin.service:
         name: nginx
         state: restarted
-...

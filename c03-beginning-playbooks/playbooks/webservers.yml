@@ -1,26 +1,36 @@
+---
 - name: Configure webserver with nginx
-  hosts: webservers
-  become: True
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: true
+
   tasks:
     - name: Ensure nginx is installed
-      package: name=nginx update_cache=yes
+      ansible.builtin.package:
+        name: nginx
+        state: present
+        update_cache: true
 
     - name: Copy nginx config file
-      copy:
-        src: nginx.conf
+      ansible.builtin.copy:
+        src: playbooks/templates/nginx.conf
         dest: /etc/nginx/sites-available/default
+        mode: "0644"
 
-    - name: Manage configuration
-      file: >
-        dest=/etc/nginx/sites-enabled/default
-        src=/etc/nginx/sites-available/default
-        state=link
+    - name: Ensure symlink for site-enabled
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        state: link
 
-    - name: Copy home page template
-      template: >
-        src=index.html.j2
-        dest=/usr/share/nginx/html/index.html
+    - name: Deploy home page template
+      ansible.builtin.template:
+        src: playbooks/templates/index.html.j2
+        dest: /usr/share/nginx/html/index.html
+        mode: "0644"
 
     - name: Restart nginx
-      service: name=nginx state=restarted
-...
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
