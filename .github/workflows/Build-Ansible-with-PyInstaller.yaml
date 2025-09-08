@@ -50,10 +50,8 @@ jobs:
         shell: pwsh
         env:
           PYTHONUTF8: "1"
-          LC_ALL: "C.UTF-8"
-          LANG: "C.UTF-8"
-        run: |
-          chcp 65001
+          PYTHONIOENCODING: "utf-8"
+        run: |          
           pyinstaller build.spec
 
       - name: Archive build outputs (Linux)
