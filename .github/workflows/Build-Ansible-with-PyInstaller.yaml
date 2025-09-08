@@ -5,7 +5,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout project
@@ -18,7 +21,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          python3 -m pip install --upgrade pip setuptools wheel pyinstaller
+          python -m pip install --upgrade pip setuptools wheel pyinstaller
 
       - name: Clone Ansible v2.19.0
         working-directory: c01-introduction
@@ -27,11 +30,12 @@ jobs:
           cd ansible
           git checkout v2.19.0
           git submodule update --init --recursive
-          python3 -m pip install -e .
-          python3 -m pip install -r requirements.txt
+          python -m pip install -e .
+          python -m pip install -r requirements.txt
           cp ../build.spec ./build.spec
 
-      - name: Source env-setup
+      - name: Source env-setup (Linux only)
+        if: runner.os == 'Linux'
         working-directory: c01-introduction/ansible
         run: source hacking/env-setup
         shell: bash
@@ -40,11 +44,19 @@ jobs:
         working-directory: c01-introduction/ansible
         run: pyinstaller build.spec
 
-      - name: Archive build outputs
+      - name: Archive build outputs (Linux)
+        if: runner.os == 'Linux'
         run: |
           cd c01-introduction/ansible/dist
-          tar -czf ansible-bundle-v2.19.0.tar.gz ansible-bundle
-          mv ansible-bundle-v2.19.0.tar.gz $GITHUB_WORKSPACE/
+          tar -czf ansible-bundle-v2.19.0-linux.tar.gz ansible-bundle
+          mv ansible-bundle-v2.19.0-linux.tar.gz $GITHUB_WORKSPACE/
+
+      - name: Archive build outputs (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd c01-introduction/ansible/dist
+          powershell Compress-Archive -Path ansible-bundle -DestinationPath ansible-bundle-v2.19.0-windows.zip
+          mv ansible-bundle-v2.19.0-windows.zip $env:GITHUB_WORKSPACE\
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -52,6 +64,7 @@ jobs:
           tag_name: v2.19.0
           name: "Ansible PyInstaller v2.19.0"
           files: |
-            ansible-bundle-v2.19.0.tar.gz
+            ansible-bundle-v2.19.0-linux.tar.gz
+            ansible-bundle-v2.19.0-windows.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
