@@ -19,9 +19,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Setup environment
-        run: |
-          python -m pip install --upgrade pip setuptools wheel pyinstaller
+      - name: Install build dependencies
+        run: python -m pip install --upgrade pip setuptools wheel pyinstaller
 
       - name: Clone Ansible v2.19.0
         working-directory: c01-introduction
@@ -40,9 +39,22 @@ jobs:
         run: source hacking/env-setup
         shell: bash
 
-      - name: Run PyInstaller build
+      - name: Run PyInstaller build (Linux)
+        if: runner.os == 'Linux'
         working-directory: c01-introduction/ansible
         run: pyinstaller build.spec
+
+      - name: Run PyInstaller build (Windows)
+        if: runner.os == 'Windows'
+        working-directory: c01-introduction/ansible
+        shell: pwsh
+        env:
+          PYTHONUTF8: "1"
+          LC_ALL: "C.UTF-8"
+          LANG: "C.UTF-8"
+        run: |
+          chcp 65001
+          pyinstaller build.spec
 
       - name: Archive build outputs (Linux)
         if: runner.os == 'Linux'

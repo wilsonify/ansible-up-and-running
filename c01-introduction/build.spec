@@ -50,7 +50,7 @@ for exe_name, entry in cli_scripts.items():
         hiddenimports=hiddenimports,
         hookspath=[],
         runtime_hooks=[],
-        excludes=[],
+        excludes=["fcntl"],
         noarchive=False,
     )
 
